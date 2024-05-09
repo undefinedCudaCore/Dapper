@@ -14,8 +14,8 @@
             DirbaNuo = dirbaNuo;
             GimimoMetai = gimimoMetai;
             Pareigos = pareigos;
-            SkyriausPavadinimas = skyriausPavadinimas;
-            ProjektoId = projektoId;
+            Skyrius_pavadinimas = skyriausPavadinimas;
+            Projektas_Id = projektoId;
         }
 
         public string AsmensKodas { get; set; }
@@ -24,7 +24,7 @@
         public DateTime DirbaNuo { get; set; }
         public DateTime GimimoMetai { get; set; }
         public string Pareigos { get; set; }
-        public string SkyriausPavadinimas { get; set; }
-        public int ProjektoId { get; set; }
+        public string Skyrius_pavadinimas { get; set; }
+        public int Projektas_Id { get; set; }
     }
 }

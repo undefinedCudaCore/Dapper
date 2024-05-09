@@ -13,11 +13,17 @@ namespace _01_dapper
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 var darbuotojasService = new DarbuotojasService();
-                var newEmployee = darbuotojasService.CreateEmployee("123456", "Jurgis", "Antaninas", DateTime.Parse("2000-06-06"), DateTime.Parse("1999-05-08"), "NeSargas", "JavaScript", 2);
+                //var newEmployee = darbuotojasService.CreateEmployee("123456", "Jurgis", "Antaninas", DateTime.Parse("2000-06-06"), DateTime.Parse("1999-05-08"), "NeSargas", "JavaScript", 2);
 
                 //darbuotojasService.AddEmployee(connection, newEmployee);
-                //var sabutis = darbuotojasService.GetEmployeeBySurename(connection, "Sabutis");
+                var gotAnEmployee = darbuotojasService.GetEmployeeBySurename(connection, "Sabutis");
+                darbuotojasService.PrintInformation(gotAnEmployee);
+                darbuotojasService.DeleteEmployeeByPersonalCode(connection, "123456");
+                darbuotojasService.UpdateEmployees(connection, "Asanis", "Sargas");
 
+                SqlConnection connection2 = new SqlConnection(connectionString);
+                var gotAnEmployee2 = darbuotojasService.GetEmployeeBySurename(connection2, "Asanis");
+                darbuotojasService.PrintInformation(gotAnEmployee2);
             }
         }
     }

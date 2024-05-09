@@ -1,12 +1,13 @@
 ﻿using _01_dapper.Models;
+using _01_dapper.Services.Interfaces;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
 namespace _01_dapper.Services
 {
-    internal class DarbuotojasService
+    internal class DarbuotojasService : IDarbuotojasService
     {
-        internal Darbuotojas CreateEmployee(
+        public Darbuotojas CreateEmployee(
             string aK,
             string vardas,
             string pavarde,
@@ -29,7 +30,7 @@ namespace _01_dapper.Services
             return newEmployee;
         }
 
-        internal IEnumerable<Darbuotojas> GetEmployeeBySurename(SqlConnection connection, string pavarde)
+        public IEnumerable<Darbuotojas> GetEmployeeBySurename(SqlConnection connection, string pavarde)
         {
             var sql = "EXECUTE [getAllFromDarbuotojasWherePavarde_exNo8] @pavarde";
             var values = new
@@ -42,7 +43,7 @@ namespace _01_dapper.Services
             return gotAnEmployee;
         }
 
-        internal void AddEmployee(SqlConnection connection, Darbuotojas newEmployee)
+        public void AddEmployee(SqlConnection connection, Darbuotojas newEmployee)
         {
             var sql = "EXECUTE [addDarbuotojasInfoIntoDarbuotojas_exNo10] @ak, @vardas, @pavarde, @dirbaNuo, @gimimoMetai, @pareigos, @skyrius, @projektoId";
             var values = new
@@ -53,23 +54,49 @@ namespace _01_dapper.Services
                 @dirbaNuo = newEmployee.DirbaNuo,
                 @gimimoMetai = newEmployee.GimimoMetai,
                 @pareigos = newEmployee.Pareigos,
-                @skyrius = newEmployee.SkyriausPavadinimas,
-                @projektoId = newEmployee.ProjektoId
+                @skyrius = newEmployee.Skyrius_pavadinimas,
+                @projektoId = newEmployee.Projektas_Id
             };
-            var data = connection.Query<Darbuotojas>(sql, values);
-        }
-        internal void UpdateEmployee(SqlConnection connection)
-        {
-
-        }
-        internal void DeleteEmployee(SqlConnection connection)
-        {
-
+            connection.Query<Darbuotojas>(sql, values);
         }
 
-        internal void PrintInformation()
+        public void UpdateEmployees(SqlConnection connection, string pavarde, string newPareigos)
         {
+            var sql = "EXECUTE [updatePareigosWhereDarbuotojas_exNo15] @pavarde, @pareigos";
+            var values = new
+            {
+                @pavarde = pavarde,
+                @pareigos = newPareigos
+            };
+            connection.Query<Darbuotojas>(sql, values);
+        }
 
+        public void DeleteEmployeeByPersonalCode(SqlConnection connection, string ak)
+        {
+            var sql = "EXECUTE [removeFromDarbuotojasWhereAsmensKodas_exNo13] @ak";
+            var values = new
+            {
+                @ak = ak
+            };
+            connection.Query<Darbuotojas>(sql, values);
+        }
+
+        internal void PrintInformation(IEnumerable<Darbuotojas> newEmployee)
+        {
+            Console.WriteLine("---------------");
+            Console.WriteLine("Information about employee:");
+            foreach (var employee in newEmployee)
+            {
+                Console.WriteLine($"Personal code: {employee.AsmensKodas}");
+                Console.WriteLine($"Name: {employee.Vardas}");
+                Console.WriteLine($"Surename: {employee.Pavarde}");
+                Console.WriteLine($"Works from: {employee.DirbaNuo.ToString("yyyy-MM-dd")}");
+                Console.WriteLine($"Birth date: {employee.GimimoMetai.ToString("yyyy-MM-dd")}");
+                Console.WriteLine($"Job: {employee.Pareigos}");
+                Console.WriteLine($"Department: {employee.Skyrius_pavadinimas}");
+                Console.WriteLine($"Project ID: {employee.Projektas_Id}");
+                Console.WriteLine("---------------");
+            }
         }
     }
 }
